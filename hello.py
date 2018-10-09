@@ -1,3 +1,5 @@
 print("Hello")
+print("Changes in Another")
+print("More Changes in Another")
 print("World")
 print("More Changes")
