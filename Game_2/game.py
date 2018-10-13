@@ -12,8 +12,6 @@ def list_of_items(items): # lists out a given array of items
         output += (", " + item['name']) #construct output
     return output[2:] # trims off the ", " from the front of the output
 
-
-
 def print_room_items(room): # prints items in a given room
     output = "There is a "
     item_list = list_of_items(room['items'])
@@ -51,10 +49,10 @@ def print_menu(exits, room_items, inv_items): # function to print a menu of acti
     for direction in exits:
         # Print the exit name and where it leads to
         print_exit(direction, exit_leads_to(exits, direction))
-    
+
     for room_item in room_items:
         print("TAKE", room_item['id'].upper(), " to take ", room_item['name'].upper(), "which weighs", room_item['weight'])
-        
+
     for inv_item in inv_items:
         print("DROP", inv_item['id'].upper(), " to drop ", inv_item['name'].upper(), "which weighs", inv_item['weight'])
 
@@ -115,7 +113,7 @@ def is_game_won(): # function to see if all items are in reception (is future-pr
         return True
     else:
         return False
-    
+
 
 def execute_go(direction): # executes a go command to change rooms
     """This function, given the direction (e.g. "south") updates the current room
@@ -138,7 +136,7 @@ def execute_take(item_id): # executes a take command to pick up an item
     """
     success = False
     for items in current_room['items']: # loop through room's items
-        if items['id'] == item_id: 
+        if items['id'] == item_id:
             if is_pickup_valid(inventory, items) == True: # check if an item can be physically picked up
                 current_room['items'].remove(items) # removes item from current room item pool
                 inventory.append(items) # adds item to inventory
@@ -146,7 +144,7 @@ def execute_take(item_id): # executes a take command to pick up an item
                 success = True
     if success == False:
         print("You cannot take that")
-        
+
 def execute_drop(item_id): # executes an item drop to drop an item
     success = False
     for items in inventory: # loops through inventory
@@ -233,7 +231,7 @@ def move(exits, direction): # gets the next room to move to
 def main(): #main game loop
     won = False # initalise win condition bool
     # Main game loop
-    
+
     #check game victory status
     while won == False:
         # Display game status (room description, inventory etc.)
@@ -242,19 +240,19 @@ def main(): #main game loop
 
         # Show the menu with possible actions and ask the player
         command = menu(current_room["exits"], current_room["items"], inventory)
-        
+
         # Execute the player's command
         execute_command(command)
-        
+
         #check if game is won
         won = is_game_won()
-        
+
         # if game is won, print victory message
         if won == True:
             print("========================")
             print("Congratulations!")
             print("You have won the game")
-            print("========================")           
+            print("========================")
 
 # Are we being run as a script? If so, run main().
 # '__main__' is the name of the scope in which top-level code executes.
