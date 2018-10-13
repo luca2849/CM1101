@@ -58,7 +58,6 @@ def print_menu(exits, room_items, inv_items): # function to print a menu of acti
 
     print("What do you want to do?")
 
-
 def is_valid_exit(exits, chosen_exit): # function to check if an exit is valid
     """This function checks, given a dictionary "exits" (see map.py) and
     a players's choice "chosen_exit" whether the player has chosen a valid exit.
@@ -76,11 +75,10 @@ def is_valid_exit(exits, chosen_exit): # function to check if an exit is valid
     True
     """
     bool = False # bool variable to check if exit is valid
-    for exit in exits:
-        if exit == chosen_exit:
-            bool = True
-    return bool
-
+    for exit in exits: # loops through exits
+        if exit == chosen_exit: #checks if the given exit exists
+            bool = True # sets the boolean value to true
+    return bool # boolean value is then returned
 
 def get_current_weight(inventory): # function to get the player's current total carry weight
     total_weight = 0 # initialise total weight variable
@@ -113,7 +111,6 @@ def is_game_won(): # function to see if all items are in reception (is future-pr
         return True
     else:
         return False
-
 
 def execute_go(direction): # executes a go command to change rooms
     """This function, given the direction (e.g. "south") updates the current room
