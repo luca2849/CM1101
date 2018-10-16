@@ -290,15 +290,20 @@ def execute_take(item_id): # executes a take command to pick up an item
         print("You cannot take that")
 
 def execute_drop(item_id): # executes an item drop to drop an item
-    success = False
-    for items in inventory: # loops through inventory
-        if item_id == items['id']:
-            current_room['items'].append(items) # adds item to room's item pool
-            inventory.remove(items) # removes item from inventory
-            print(items['name'], "dropped") # success message
-            success = True
-    if success == False:
-        print("You cannot drop that")
+	"""This function takes an item_id as an argument and moves this item from the
+	player's inventory to list of items in the current room. However, if there is
+	no such item in the inventory, this function prints "You cannot drop that."
+	"""
+	
+	success = False
+	for items in inventory: # loops through inventory
+		if item_id == items['id']:
+			current_room['items'].append(items) # adds item to room's item pool
+			inventory.remove(items) # removes item from inventory
+			print(items['name'], "dropped") # success message
+			success = True
+	if success == False:
+		print("You cannot drop that")
 
 def execute_command(command): # command sorting function
     """This function takes a command (a list of words as returned by
