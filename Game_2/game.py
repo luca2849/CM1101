@@ -125,8 +125,8 @@ def print_room(room): # prints information about the room and player
 
 	Note: <BLANKLINE> here means that doctest should expect a blank line.
 	"""
-	print("\n", room["name"].upper(), "\n")
-	print(room["description"], "\n")
+	print("\n" + room["name"].upper() + "\n")
+	print(room["description"] + "\n")
 	if len(room['items']) > 0:
 		print_room_items(room)
 
