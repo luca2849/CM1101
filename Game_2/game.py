@@ -7,56 +7,203 @@ from items import *
 from gameparser import *
 
 def list_of_items(items): # lists out a given array of items
+    """This function takes a list of items (see items.py for the definition) and
+    returns a comma-separated list of item names (as a string). For example:
+
+    >>> list_of_items([item_pen, item_handbook])
+    'a pen, a student handbook'
+
+    >>> list_of_items([item_id])
+    'id card'
+
+    >>> list_of_items([])
+    ''
+
+    >>> list_of_items([item_money, item_handbook, item_laptop])
+    'money, a student handbook, laptop'
+
+    """
     output = "" #initiate empty output string
     for item in items: #iterate through the items list
         output += (", " + item['name']) #construct output
     return output[2:] # trims off the ", " from the front of the output
 
 def print_room_items(room): # prints items in a given room
-    output = "There is a "
-    item_list = list_of_items(room['items'])
-    output = output + item_list + " here\n"
-    print(output)
+	"""This function takes a room as an input and nicely displays a list of items
+	found in this room (followed by a blank line). If there are no items in
+	the room, nothing is printed. See map.py for the definition of a room, and
+	items.py for the definition of an item. This function uses list_of_items()
+	to produce a comma-separated list of item names. For example:
+
+	>>> print_room_items(rooms["Reception"])
+	There is a pack of biscuits, a student handbook here.
+	<BLANKLINE>
+
+	>>> print_room_items(rooms["Office"])
+	There is a pen here.
+	<BLANKLINE>
+
+	>>> print_room_items(rooms["Admins"])
+
+	(no output)
+
+	Note: <BLANKLINE> here means that doctest should expect a blank line.
+
+	"""
+	item_list = list_of_items(room['items'])
+	if item_list != "":
+		output = "There is "
+		item_list = list_of_items(room['items'])
+		output = output + item_list + " here.\n"
+		print(output)
+	else:
+		return None
 
 def print_inventory_items(items): # prints inventory and player information (carry weight)
+    """This function takes a list of inventory items and displays it nicely, in a
+    manner similar to print_room_items(). The only difference is in formatting:
+    print "You have ..." instead of "There is ... here.". For example:
+
+    >>> print_inventory_items(inventory)
+    You have id card, laptop, money.
+    <BLANKLINE>
+
+    """
     output = "You have "
     if len(items) > 0:
         for item in items:
             output += item["name"] + ", "
         output = output[:-2] # Trims off the extra comma and spaces
     else:
-        output += "no items"
-    output += "\n"
+        output += "no items."
+    output += ".\n"
     print(output)
-    print('You have a maximum carry weight of', max_carry_weight)
-    print('You currently have a carry weight of', get_current_weight(inventory))
 
 def print_room(room): # prints information about the room and player
-    print("\n", room["name"].upper(), "\n")
-    print(room["description"], "\n")
-    if len(room['items']) > 0:
-        print_room_items(room)
+	"""This function takes a room as an input and nicely displays its name
+    and description. The room argument is a dictionary with entries "name",
+    "description" etc. (see map.py for the definition). The name of the room
+    is printed in all capitals and framed by blank lines. Then follows the
+    description of the room and a blank line again. If there are any items
+    in the room, the list of items is printed next followed by a blank line
+    (use print_room_items() for this). For example:
+
+    >>> print_room(rooms["Office"])
+    <BLANKLINE>
+    THE GENERAL OFFICE
+    <BLANKLINE>
+    You are standing next to the cashier's till at
+    30-36 Newport Road. The cashier looks at you with hope
+    in their eyes. If you go west you can return to the
+    Queen's Buildings.
+    <BLANKLINE>
+    There is a pen here.
+    <BLANKLINE>
+
+    >>> print_room(rooms["Reception"])
+    <BLANKLINE>
+    RECEPTION
+    <BLANKLINE>
+    You are in a maze of twisty little passages, all alike.
+    Next to you is the School of Computer Science and
+    Informatics reception. The receptionist, Matt Strangis,
+    seems to be playing an old school text-based adventure
+    game on his computer. There are corridors leading to the
+    south and east. The exit is to the west.
+    <BLANKLINE>
+    There is a pack of biscuits, a student handbook here.
+    <BLANKLINE>
+
+    >>> print_room(rooms["Admins"])
+    <BLANKLINE>
+    MJ AND SIMON'S ROOM
+    <BLANKLINE>
+    You are leaning agains the door of the systems managers'
+    room. Inside you notice Matt "MJ" John and Simon Jones. They
+    ignore you. To the north is the reception.
+    <BLANKLINE>
+
+	Note: <BLANKLINE> here means that doctest should expect a blank line.
+	"""
+	print("\n" + room["name"].upper() + "\n")
+	print(room["description"] + "\n")
+	if len(room['items']) > 0:
+		print_room_items(room)
 
 def exit_leads_to(exits, direction): # lists where a given exit leads
+    """This function takes a dictionary of exits and a direction (a particular
+    exit taken from this dictionary). It returns the name of the room into which
+    this exit leads. For example:
+
+    >>> exit_leads_to(rooms["Reception"]["exits"], "south")
+    "MJ and Simon's room"
+    >>> exit_leads_to(rooms["Reception"]["exits"], "east")
+    "your personal tutor's office"
+    >>> exit_leads_to(rooms["Tutor"]["exits"], "west")
+    'Reception'
+    """
     return rooms[exits[direction]]["name"]
 
 def print_exit(direction, leads_to): # prints all exits from a room
+    """This function prints a line of a menu of exits. It takes a direction (the
+    name of an exit) and the name of the room into which it leads (leads_to),
+    and should print a menu line in the following format:
+
+    GO <EXIT NAME UPPERCASE> to <where it leads>.
+
+    For example:
+    >>> print_exit("east", "you personal tutor's office")
+    GO EAST to you personal tutor's office.
+    >>> print_exit("south", "MJ and Simon's room")
+    GO SOUTH to MJ and Simon's room.
+    """
     print("GO " + direction.upper() + " to " + leads_to + ".")
 
 def print_menu(exits, room_items, inv_items): # function to print a menu of actions to perform
-    print("You can:")
+	"""This function displays the menu of available actions to the player. The
+    argument exits is a dictionary of exits as exemplified in map.py. The
+    arguments room_items and inv_items are the items lying around in the room
+    and carried by the player respectively. The menu should, for each exit,
+    call the function print_exit() to print the information about each exit in
+    the appropriate format. The room into which an exit leads is obtained
+    using the function exit_leads_to(). Then, it should print a list of commands
+    related to items: for each item in the room print
+
+    "TAKE <ITEM ID> to take <item name>."
+
+    and for each item in the inventory print
+
+    "DROP <ITEM ID> to drop <item name>."
+
+    For example, the menu of actions available at the Reception may look like this:
+
+    You can:
+    GO EAST to your personal tutor's office.
+    GO WEST to the parking lot.
+    GO SOUTH to MJ and Simon's room.
+    TAKE BISCUITS to take a pack of biscuits.
+    TAKE HANDBOOK to take a student handbook.
+    DROP ID to drop your id card.
+    DROP LAPTOP to drop your laptop.
+    DROP MONEY to drop your money.
+    What do you want to do?
+
+    """
+	print('You have a maximum carry weight of', max_carry_weight)
+	print('You currently have a carry weight of', get_current_weight(inventory))
+	print("You can:")
     # Iterate over available exits
-    for direction in exits:
+	for direction in exits:
         # Print the exit name and where it leads to
-        print_exit(direction, exit_leads_to(exits, direction))
+		print_exit(direction, exit_leads_to(exits, direction))
 
-    for room_item in room_items:
-        print("TAKE", room_item['id'].upper(), " to take ", room_item['name'].upper(), "which weighs", room_item['weight'])
+	for room_item in room_items:
+		print("TAKE", room_item['id'].upper(), " to take ", room_item['name'].upper(), "which weighs", room_item['weight'])
 
-    for inv_item in inv_items:
-        print("DROP", inv_item['id'].upper(), " to drop ", inv_item['name'].upper(), "which weighs", inv_item['weight'])
+	for inv_item in inv_items:
+		print("DROP", inv_item['id'].upper(), " to drop ", inv_item['name'].upper(), "which weighs", inv_item['weight'])
 
-    print("What do you want to do?")
+	print("What do you want to do?")
 
 def is_valid_exit(exits, chosen_exit): # function to check if an exit is valid
     """This function checks, given a dictionary "exits" (see map.py) and
@@ -143,15 +290,20 @@ def execute_take(item_id): # executes a take command to pick up an item
         print("You cannot take that")
 
 def execute_drop(item_id): # executes an item drop to drop an item
-    success = False
-    for items in inventory: # loops through inventory
-        if item_id == items['id']:
-            current_room['items'].append(items) # adds item to room's item pool
-            inventory.remove(items) # removes item from inventory
-            print(items['name'], "dropped") # success message
-            success = True
-    if success == False:
-        print("You cannot drop that")
+	"""This function takes an item_id as an argument and moves this item from the
+	player's inventory to list of items in the current room. However, if there is
+	no such item in the inventory, this function prints "You cannot drop that."
+	"""
+	
+	success = False
+	for items in inventory: # loops through inventory
+		if item_id == items['id']:
+			current_room['items'].append(items) # adds item to room's item pool
+			inventory.remove(items) # removes item from inventory
+			print(items['name'], "dropped") # success message
+			success = True
+	if success == False:
+		print("You cannot drop that")
 
 def execute_command(command): # command sorting function
     """This function takes a command (a list of words as returned by

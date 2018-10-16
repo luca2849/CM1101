@@ -13,7 +13,7 @@ south and east. The exit is to the west.""",
 
     "exits": {"south": "Admins", "east": "Tutor", "west": "Parking"},
 
-    "items": [item_handbook]
+    "items": [item_biscuits, item_handbook]
 }
 
 room_admins = {
@@ -26,7 +26,7 @@ ignore you. To the north is the reception.""",
 
     "exits":  {"north": "Reception"},
 
-    "items": [item_biscuits]
+    "items": []
 }
 
 room_tutor = {
