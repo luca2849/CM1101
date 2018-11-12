@@ -1,9 +1,9 @@
 number_of_terms = input("Enter the number of terms to generate > ")
 number_of_terms = int(number_of_terms)
 def fibbonacci(terms):
-    arr = [0, 1]
+    arr = [0, 1, 1]
     output = ""
-    for x in range(1, terms):
+    for x in range(2, terms):
         arr.append(arr[x] + arr[x-1])
     return arr
 
